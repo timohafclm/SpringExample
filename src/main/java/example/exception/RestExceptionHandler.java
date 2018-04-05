@@ -14,7 +14,7 @@ import java.sql.SQLTimeoutException;
 public class RestExceptionHandler {
 
     @ExceptionHandler(ApplicationNotFoundException.class)
-    public ResponseEntity<ErrorResponse> exceptionApplicationNotFound(){
+    public ResponseEntity<ErrorResponse> exceptionApplicationNotFound(Exception e){
         ErrorResponse error = new ErrorResponse();
         error.setErrorCode(HttpStatus.NOT_FOUND.value());
         error.setMessage("application not found");
@@ -22,7 +22,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateApplicationException.class)
-    public ResponseEntity<ErrorResponse> exceptionDuplicateApplication(){
+    public ResponseEntity<ErrorResponse> exceptionDuplicateApplication(Exception e){
         ErrorResponse error = new ErrorResponse();
         error.setErrorCode(HttpStatus.CONFLICT.value());
         error.setMessage("need to deduplicate application");

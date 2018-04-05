@@ -20,10 +20,6 @@
         <property name="password" value="${jdbc.password}" />
     </bean>
 
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
 
     <jdbc:initialize-database data-source="dataSource">
         <jdbc:script location="dbschema.sql"/>

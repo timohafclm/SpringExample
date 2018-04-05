@@ -5,11 +5,13 @@ import example.exception.ApplicationNotFoundException;
 import example.exception.DuplicateApplicationException;
 import example.model.Application;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Component
 public class ApplicationService {
     @Autowired
     JDBCLayer jdbc;

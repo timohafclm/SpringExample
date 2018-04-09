@@ -1,49 +1,80 @@
 package example.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
-@XmlRootElement
+@Entity
+@XmlRootElement(name="APPLICATION")
+@XmlAccessorType(XmlAccessType.FIELD)
+@Table(name = "applications")
 public class Application {
-    private String APPLICATION_ID;
-    private Integer CONTACT_ID;
-    private Date DT_CREATED;
-    private String PRODUCT_NAME;
+    @Id
+    @Column(name = "APPLICATION_ID")
+    @XmlElement(name = "APPLICATION_ID")
+    @JsonProperty("APPLICATION_ID")
+    private String applicationId;
 
-    @XmlElement
-    public void setAPPLICATION_ID(String APPLICATION_ID) {
-        this.APPLICATION_ID = APPLICATION_ID;
+    @Column(name = "DT_CREATED")
+    @XmlElement(name = "DT_CREATED")
+    @JsonProperty("DT_CREATED")
+    private Date dtCreated;
+
+    @Column(name = "PRODUCT_NAME")
+    @XmlElement(name = "PRODUCT_NAME")
+    @JsonProperty("PRODUCT_NAME")
+    private String productName;
+
+    @ManyToOne
+    @JoinColumn(name = "CONTACT_ID")
+    @XmlElement(name = "CONTACT_ID")
+    @JsonProperty("CONTACT_ID")
+    private Contact contactId;
+
+    public Application() {
     }
 
-    @XmlElement
-    public void setCONTACT_ID(Integer CONTACT_ID) {
-        this.CONTACT_ID = CONTACT_ID;
+    public Application(String applicationId, Date dtCreated, String productName, Contact contactId) {
+        this.applicationId = applicationId;
+        this.dtCreated = dtCreated;
+        this.productName = productName;
+        this.contactId = contactId;
     }
 
-    @XmlElement
-    public void setDT_CREATED(Date DT_CREATED) {
-        this.DT_CREATED = DT_CREATED;
+    public String getApplicationId() {
+        return applicationId;
     }
 
-    @XmlElement
-    public void setPRODUCT_NAME(String PRODUCT_NAME) {
-        this.PRODUCT_NAME = PRODUCT_NAME;
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
     }
 
-    public String getAPPLICATION_ID() {
-        return APPLICATION_ID;
+    public Date getDtCreated() {
+        return dtCreated;
     }
 
-    public Integer getCONTACT_ID() {
-        return CONTACT_ID;
+    public void setDtCreated(Date dtCreated) {
+        this.dtCreated = dtCreated;
     }
 
-    public Date getDT_CREATED() {
-        return DT_CREATED;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getPRODUCT_NAME() {
-        return PRODUCT_NAME;
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Contact getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Contact contactId) {
+        this.contactId = contactId;
     }
 }

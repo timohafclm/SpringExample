@@ -1,6 +1,7 @@
 package example.service;
 
-import example.dao.JDBCLayer;
+import example.model.Contact;
+import example.repository.ApplicationRepository;
 import example.exception.ApplicationNotFoundException;
 import example.exception.DuplicateApplicationException;
 import example.model.Application;
@@ -10,18 +11,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 @Component
 public class ApplicationService {
     @Autowired
-    JDBCLayer jdbc;
+    ApplicationRepository applicationRepository;
 
-    public Application getLastApplication(int contactId) throws Exception{
-        List<Application> result = jdbc.lastApplication(contactId);
+    public Application getLastApplication(Integer contactId) throws Exception{
+        List<Application> result = applicationRepository.findTopByContactIdOrderByDtCreatedDesc(new Contact(contactId));
         if (result == null || result.size()==0) {
             throw new ApplicationNotFoundException();
         }
-        if(result.size()==2 && result.get(0).getPRODUCT_NAME().equals(result.get(1).getPRODUCT_NAME())){
+        if(result.size()==2 && result.get(0).getProductName().equals(result.get(1).getProductName())){
             throw new DuplicateApplicationException();
         }
         return result.get(0);

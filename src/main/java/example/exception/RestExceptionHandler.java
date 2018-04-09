@@ -1,11 +1,9 @@
 package example.exception;
 
 
-import example.model.ErrorResponse;
+import example.model.WrappedExceptionResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
@@ -14,42 +12,42 @@ import java.sql.SQLTimeoutException;
 public class RestExceptionHandler {
 
     @ExceptionHandler(ApplicationNotFoundException.class)
-    public ResponseEntity<ErrorResponse> exceptionApplicationNotFound(Exception e){
-        ErrorResponse error = new ErrorResponse();
-        error.setErrorCode(HttpStatus.NOT_FOUND.value());
-        error.setMessage("application not found");
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public @ResponseBody WrappedExceptionResponse exceptionApplicationNotFound(Exception e){
+        WrappedExceptionResponse resp=new WrappedExceptionResponse();
+        resp.setResponse("application not found");
+        return resp;
     }
 
     @ExceptionHandler(DuplicateApplicationException.class)
-    public ResponseEntity<ErrorResponse> exceptionDuplicateApplication(Exception e){
-        ErrorResponse error = new ErrorResponse();
-        error.setErrorCode(HttpStatus.CONFLICT.value());
-        error.setMessage("need to deduplicate application");
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public @ResponseBody WrappedExceptionResponse exceptionDuplicateApplication(Exception e){
+        WrappedExceptionResponse resp=new WrappedExceptionResponse();
+        resp.setResponse("need to deduplicate application");
+        return resp;
     }
 
     @ExceptionHandler(SQLTimeoutException.class)
-    public ResponseEntity<ErrorResponse> exceptionDbTimeout(){
-        ErrorResponse error = new ErrorResponse();
-        error.setErrorCode(HttpStatus.REQUEST_TIMEOUT.value());
-        error.setMessage("database unavailable");
-        return new ResponseEntity<>(error, HttpStatus.REQUEST_TIMEOUT);
+    @ResponseStatus(value = HttpStatus.REQUEST_TIMEOUT)
+    public @ResponseBody WrappedExceptionResponse exceptionDbTimeout(){
+        WrappedExceptionResponse resp=new WrappedExceptionResponse();
+        resp.setResponse("database unavailable");
+        return resp;
     }
 
     @ExceptionHandler(SQLException.class)
-    public ResponseEntity<ErrorResponse> exceptionSql(Exception e){
-        ErrorResponse error = new ErrorResponse();
-        error.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        error.setMessage(e.getCause().toString());
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public @ResponseBody WrappedExceptionResponse exceptionSql(Exception e){
+        WrappedExceptionResponse resp=new WrappedExceptionResponse();
+        resp.setResponse(e.getCause().toString());
+        return resp;
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exception(Exception e){
-        ErrorResponse error = new ErrorResponse();
-        error.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        error.setMessage(e.getCause().toString());
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public @ResponseBody WrappedExceptionResponse exception(Exception e){
+        WrappedExceptionResponse resp=new WrappedExceptionResponse();
+        resp.setResponse(e.getCause().toString());
+        return resp;
     }
 }

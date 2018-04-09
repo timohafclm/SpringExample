@@ -19,14 +19,6 @@ public class RestExceptionHandler {
         return resp;
     }
 
-    @ExceptionHandler(DuplicateApplicationException.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
-    public @ResponseBody WrappedExceptionResponse exceptionDuplicateApplication(Exception e){
-        WrappedExceptionResponse resp=new WrappedExceptionResponse();
-        resp.setResponse("need to deduplicate application");
-        return resp;
-    }
-
     @ExceptionHandler(SQLTimeoutException.class)
     @ResponseStatus(value = HttpStatus.REQUEST_TIMEOUT)
     public @ResponseBody WrappedExceptionResponse exceptionDbTimeout(){
@@ -39,7 +31,7 @@ public class RestExceptionHandler {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public @ResponseBody WrappedExceptionResponse exceptionSql(Exception e){
         WrappedExceptionResponse resp=new WrappedExceptionResponse();
-        resp.setResponse(e.getCause().toString());
+        resp.setResponse(e.toString());
         return resp;
     }
 
@@ -47,7 +39,7 @@ public class RestExceptionHandler {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public @ResponseBody WrappedExceptionResponse exception(Exception e){
         WrappedExceptionResponse resp=new WrappedExceptionResponse();
-        resp.setResponse(e.getCause().toString());
+        resp.setResponse(e.toString());
         return resp;
     }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, String> {
-    List<Application> findTopByContactIdOrderByDtCreatedDesc (Contact contact) throws Exception;
+    Application findTopByContactIdOrderByDtCreatedDesc (Contact contact) throws Exception;
 }

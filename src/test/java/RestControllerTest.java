@@ -30,8 +30,9 @@ import static org.hamcrest.Matchers.*;
 @WebAppConfiguration
 public class RestControllerTest {
     private MockMvc mockMvc;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
     private List<Application> applicationList = new ArrayList<>();
+    private Application lastApplication;
 
     private MediaType contentTypeJson = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
@@ -52,14 +53,13 @@ public class RestControllerTest {
     @Before
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
-        applicationList.add(new Application("test1", sdf.parse("2018-01-10 15:00:00"),"Black", new Contact(5)));
-        applicationList.add(new Application("test2", sdf.parse("2017-05-08 20:00:00"),"Black", new Contact(5)));
+        applicationList.add(new Application("test1", sdf.parse("2018-01-10 15:00"),"Black", new Contact(5)));
+        applicationList.add(new Application("test2", sdf.parse("2017-05-08 20:00"),"Black", new Contact(5)));
         for(Application application : applicationList){
             this.contactRepository.save(application.getContactId());
             this.applicationRepository.save(application);
         }
-
-
+        lastApplication = applicationList.get(0);
     }
 
     @Test
@@ -70,29 +70,25 @@ public class RestControllerTest {
 
     @Test
     public void getJsonFormat() throws Exception{
-        mockMvc.perform(get("/last_application?id=" + applicationList.get(0).getContactId().getContactId())
-                .header("Content-Type", contentTypeJson))
+        mockMvc.perform(get("/last_application?id=" + lastApplication.getContactId().getContactId())
+                .header("Accept", contentTypeJson))
                 .andExpect(content().contentType(contentTypeJson));
     }
 
     @Test
     public void getXmlFormat() throws Exception{
-        mockMvc.perform(get("/last_application?id=" + applicationList.get(0).getContactId().getContactId())
-                .header("Content-Type", contentTypeXml))
+        mockMvc.perform(get("/last_application?id=" + lastApplication.getContactId().getContactId())
+                .header("Accept", contentTypeXml))
                 .andExpect(content().contentType(contentTypeXml));
     }
 
     @Test
-    public void lastApplication() throws Exception{
-        mockMvc.perform(get("/last_application?id=" + applicationList.get(0).getContactId().getContactId())
+    public void verifyLastApplication() throws Exception{
+        mockMvc.perform(get("/last_application?id=" + lastApplication.getContactId().getContactId())
                 .header("Content-Type", contentTypeJson))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentTypeJson))
-                .andExpect(jsonPath("$.APPLICATION_ID", is(applicationList.get(0).getApplicationId())))
-                .andExpect(jsonPath("$.DT_CREATED", is(applicationList.get(0).getContactId())))
-                .andExpect(jsonPath("$.PRODUCT_NAME", is(applicationList.get(0).getProductName())))
-                .andExpect(jsonPath("$.CONTACT_ID", is(applicationList.get(0).getContactId())));
-
+                .andExpect(jsonPath("$.APPLICATION_ID", is(lastApplication.getApplicationId())));
     }
 
 }

@@ -1,6 +1,7 @@
 import example.App;
 import example.model.Application;
 import example.model.Contact;
+import example.model.ResponseTransfer;
 import example.repository.ApplicationRepository;
 import example.repository.ContactRepository;
 import org.junit.Before;
@@ -65,7 +66,8 @@ public class RestControllerTest {
     @Test
     public void applicationNotFound() throws Exception{
         mockMvc.perform(get("/last_application?id=10"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("{\"response\":\"application not found\"}"));
     }
 
     @Test
@@ -89,6 +91,14 @@ public class RestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentTypeJson))
                 .andExpect(jsonPath("$.APPLICATION_ID", is(lastApplication.getApplicationId())));
+    }
+
+    @Test
+    public void verifyResponseFields() throws Exception{
+        mockMvc.perform(get("/last_application?id=" + lastApplication.getContactId().getContactId())
+                .header("Content-Type", contentTypeJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{\"APPLICATION_ID\":\"test1\",\"CONTACT_ID\":5,\"DT_CREATED\":\"2018-01-10T12:00:00.000+0000\",\"PRODUCT_NAME\":\"Black\"}"));
     }
 
 }

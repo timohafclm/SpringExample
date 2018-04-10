@@ -7,8 +7,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @Entity
-@XmlRootElement(name="APPLICATION")
-@XmlAccessorType(XmlAccessType.FIELD)
 @Table(name = "applications")
 public class Application {
     @Id
